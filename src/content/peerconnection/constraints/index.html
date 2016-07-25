@@ -53,20 +53,12 @@
       <div id="getUserMedia">
         <div class="input">
           <h2>Camera constraints</h2>
-          <div id="minWidth">
-            <label>Min width <span>300</span>px:</label>
-            <input type="range" min="0" max="1920" value="300">
-          </div>
-          <div id="maxWidth">
-            <label>Max width <span>640</span>px:</label>
+          <div id="width">
+            <label>Width <span>640</span>px:</label>
             <input type="range" min="0" max="1920" value="640">
           </div>
-          <div id="minHeight">
-            <label>Min height <span>200</span>px:</label>
-            <input type="range" min="0" max="1080" value="200">
-          </div>
-          <div id="maxHeight">
-            <label>Max height <span>480</span>px:</label>
+          <div id="height">
+            <label>Height <span>480</span>px:</label>
             <input type="range" min="0" max="1080" value="480">
           </div>
           <div id="framerate">
@@ -88,6 +80,7 @@
         <video autoplay muted></video>
         <div></div>
         <div id="bitrate"></div>
+		<div id="fps"></div>
         <div id="peer"></div>
       </div>
     </section>

@@ -16,19 +16,17 @@ getMediaButton.onclick = getMedia;
 connectButton.onclick = createPeerConnection;
 hangupButton.onclick = hangup;
 
-var minWidthInput = document.querySelector('div#minWidth input');
-var maxWidthInput = document.querySelector('div#maxWidth input');
-var minHeightInput = document.querySelector('div#minHeight input');
-var maxHeightInput = document.querySelector('div#maxHeight input');
+var widthInput = document.querySelector('div#width input');
+var heightInput = document.querySelector('div#height input');
 var framerateInput = document.querySelector('div#framerate input');
 
-minWidthInput.onchange = maxWidthInput.onchange =
-    minHeightInput.onchange = maxHeightInput.onchange =
+widthInput.onchange = heightInput.onchange =
     framerateInput.onchange = displayRangeValue;
 
 var getUserMediaConstraintsDiv =
     document.querySelector('div#getUserMediaConstraints');
 var bitrateDiv = document.querySelector('div#bitrate');
+var fpsDiv = document.querySelector('div#fps');
 var peerDiv = document.querySelector('div#peer');
 var senderStatsDiv = document.querySelector('div#senderStats');
 var receiverStatsDiv = document.querySelector('div#receiverStats');
@@ -97,27 +95,26 @@ function gotStream(stream) {
 
 function getUserMediaConstraints() {
   var constraints = {};
-  constraints.audio = true;
+  constraints.audio = false;
   constraints.video = {};
-  if (minWidthInput.value !== '0') {
+  constraints.video.chromeMediaSource = {exact: "screen"};
+  
+  if (widthInput.value !== '0') {
     constraints.video.width = {};
-    constraints.video.width.min = minWidthInput.value;
+    constraints.video.width.min = widthInput.value;
+	constraints.video.width.max = widthInput.value;
   }
-  if (maxWidthInput.value !== '0') {
-    constraints.video.width = constraints.video.width || {};
-    constraints.video.width.max = maxWidthInput.value;
-  }
-  if (minHeightInput.value !== '0') {
+
+  if (heightInput.value !== '0') {
     constraints.video.height = {};
-    constraints.video.height.min = minHeightInput.value;
+    constraints.video.height.min = heightInput.value;
+	constraints.video.height.max = heightInput.value;
   }
-  if (maxHeightInput.value !== '0') {
-    constraints.video.height = constraints.video.height || {};
-    constraints.video.height.max = maxHeightInput.value;
-  }
+
   if (framerateInput.value !== '0') {
     constraints.video.frameRate = {};
     constraints.video.frameRate.min = framerateInput.value;
+	constraints.video.frameRate.max = framerateInput.value;
   }
   return constraints;
 }
@@ -214,10 +211,12 @@ setInterval(function() {
         var now = report.timestamp;
 
         var bitrate;
+		var fps;
         if (report.type === 'inboundrtp' && report.mediaType === 'video') {
           // firefox calculates the bitrate for us
           // https://bugzilla.mozilla.org/show_bug.cgi?id=951496
           bitrate = Math.floor(report.bitrateMean / 1024);
+		  fps = report.googFrameRateReceived;
         } else if (report.type === 'ssrc' && report.bytesReceived &&
              report.googFrameHeightReceived) {
           // chrome does not so we need to do it ourselves
@@ -228,10 +227,12 @@ setInterval(function() {
           }
           bytesPrev = bytes;
           timestampPrev = now;
+		  fps = report.googFrameRateReceived;
         }
         if (bitrate) {
           bitrate += ' kbits/sec';
           bitrateDiv.innerHTML = '<strong>Bitrate:</strong> ' + bitrate;
+		  fpsDiv.innerHTML = '<strong>FPS:</strong> ' + fps;
         }
       });
 

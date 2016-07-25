@@ -44,6 +44,7 @@ remoteVideo.onresize = function() {
 };
 
 var localStream;
+var remoteStream;
 var pc1;
 var pc2;
 var offerOptions = {
@@ -60,20 +61,37 @@ function getOtherPc(pc) {
 }
 
 function gotStream(stream) {
-  trace('Received local stream');
+  trace('Received local stream of pc1');
   localVideo.srcObject = stream;
   localStream = stream;
   callButton.disabled = false;
 }
 
+function gotStream2(stream) {
+  trace('Received local stream of pc2');
+  remoteVideo.srcObject = stream;
+  remoteStream = stream;
+  callButton.disabled = false;
+}
+
 function start() {
-  trace('Requesting local stream');
+  trace('Requesting local stream for pc1');
   startButton.disabled = true;
   navigator.mediaDevices.getUserMedia({
     audio: true,
     video: true
   })
   .then(gotStream)
+  .catch(function(e) {
+    alert('getUserMedia() error: ' + e.name);
+  });
+  
+  trace('Requesting local stream for pc2');
+  navigator.mediaDevices.getUserMedia({
+    audio: false,
+    video: {'mandatory': {'chromeMediaSource':'screen'}}
+  })
+  .then(gotStream2)
   .catch(function(e) {
     alert('getUserMedia() error: ' + e.name);
   });
@@ -110,9 +128,12 @@ function call() {
     onIceStateChange(pc2, e);
   };
   pc2.onaddstream = gotRemoteStream;
+  pc1.onaddstream = gotRemoteStream2;
 
   pc1.addStream(localStream);
   trace('Added local stream to pc1');
+  pc2.addStream(remoteStream)
+  trace('Added local stream to pc2');
 
   trace('pc1 createOffer start');
   pc1.createOffer(
@@ -168,6 +189,11 @@ function onSetSessionDescriptionError(error) {
 function gotRemoteStream(e) {
   remoteVideo.srcObject = e.stream;
   trace('pc2 received remote stream');
+}
+
+function gotRemoteStream2(e) {
+  localVideo.srcObject = e.stream;
+  trace('pc1 received remote stream');
 }
 
 function onCreateAnswerSuccess(desc) {
