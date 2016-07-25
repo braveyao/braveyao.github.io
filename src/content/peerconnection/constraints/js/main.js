@@ -100,21 +100,15 @@ function getUserMediaConstraints() {
   constraints.video.chromeMediaSource = {exact: "screen"};
   
   if (widthInput.value !== '0') {
-    constraints.video.width = {};
-    constraints.video.width.min = widthInput.value;
-	constraints.video.width.max = widthInput.value;
+    constraints.video.width = {exact: parseInt(widthInput.value)};
   }
 
   if (heightInput.value !== '0') {
-    constraints.video.height = {};
-    constraints.video.height.min = heightInput.value;
-	constraints.video.height.max = heightInput.value;
+    constraints.video.height = {exact: parseInt(heightInput.value)};
   }
 
   if (framerateInput.value !== '0') {
-    constraints.video.frameRate = {};
-    constraints.video.frameRate.min = framerateInput.value;
-	constraints.video.frameRate.max = framerateInput.value;
+    constraints.video.frameRate = {exact: parseInt(framerateInput.value)};
   }
   return constraints;
 }
