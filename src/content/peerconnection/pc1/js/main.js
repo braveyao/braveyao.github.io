@@ -78,8 +78,8 @@ function start() {
   trace('Requesting local stream for pc1');
   startButton.disabled = true;
   navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true
+    audio: false,
+    video: {'mandatory': {'chromeMediaSource':'screen'}}
   })
   .then(gotStream)
   .catch(function(e) {
