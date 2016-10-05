@@ -247,6 +247,10 @@ function onIceStateChange(pc, event) {
 
 function hangup() {
   trace('Ending call');
+  var audioTracks = localStream.getAudioTracks();
+  var videoTracks = localStream.getVideoTracks();
+  audioTracks[0].stop();
+  videoTracks[0].stop();
   pc1.close();
   pc2.close();
   pc1 = null;
