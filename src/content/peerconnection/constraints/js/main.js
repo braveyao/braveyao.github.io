@@ -123,6 +123,8 @@ function gotStream(stream) {
   console.log('GetUserMedia succeeded');
   localStream = stream;
   localVideo.srcObject = stream;
+    trace('local video size changed to ' +
+    localVideo.videoWidth + 'x' + localVideo.videoHeight);
 }
 
 function getUserMediaConstraints() {
@@ -307,6 +309,8 @@ setInterval(function() {
     localVideoStatsDiv.innerHTML = '<strong>Video dimensions:</strong> ' +
       localVideo.videoWidth + 'x' + localVideo.videoHeight + 'px';
   }
+    trace('local video size changed to ' +
+    localVideo.videoWidth + 'x' + localVideo.videoHeight);
   if (remoteVideo.videoWidth) {
     remoteVideoStatsDiv.innerHTML = '<strong>Video dimensions:</strong> ' +
       remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight + 'px';
