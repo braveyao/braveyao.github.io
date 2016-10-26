@@ -31,8 +31,8 @@ var peerDiv = document.querySelector('div#peer');
 var senderStatsDiv = document.querySelector('div#senderStats');
 var receiverStatsDiv = document.querySelector('div#receiverStats');
 
-var localVideo = document.getElementById('localVideo');
-var remoteVideo = document.getElementById('remoteVideo');
+var localVideo = document.querySelector('div#localVideo video');
+var remoteVideo = document.querySelector('div#remoteVideo video');
 var localVideoStatsDiv = document.querySelector('div#localVideo div');
 var remoteVideoStatsDiv = document.querySelector('div#remoteVideo div');
 
@@ -41,39 +41,7 @@ var remotePeerConnection;
 var localStream;
 var bytesPrev;
 var timestampPrev;
-localVideo.addEventListener('loadedmetadata', function() {
-  trace('Local video videoWidth: ' + this.videoWidth +
-    'px,  videoHeight: ' + this.videoHeight + 'px');
-});
 
-localVideo.onresize = function() {
-  trace('Local video size changed to ' +
-    localVideo.videoWidth + 'x' + localVideo.videoHeight);
-  // We'll use the first onsize callback as an indication that video has started
-  // playing out.
-  if (startTime) {
-    var elapsedTime = window.performance.now() - startTime;
-    trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-    startTime = null;
-  }
-};
-
-remoteVideo.addEventListener('loadedmetadata', function() {
-  trace('Remote video videoWidth: ' + this.videoWidth +
-    'px,  videoHeight: ' + this.videoHeight + 'px');
-});
-
-remoteVideo.onresize = function() {
-  trace('Remote video size changed to ' +
-    remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight);
-  // We'll use the first onsize callback as an indication that video has started
-  // playing out.
-  if (startTime) {
-    var elapsedTime = window.performance.now() - startTime;
-    trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-    startTime = null;
-  }
-};
 main();
 
 function main() {
@@ -123,8 +91,6 @@ function gotStream(stream) {
   console.log('GetUserMedia succeeded');
   localStream = stream;
   localVideo.srcObject = stream;
-  trace('local video size changed to ' +
-    localVideo.videoWidth + 'x' + localVideo.videoHeight);
 }
 
 function getUserMediaConstraints() {
@@ -309,8 +275,6 @@ setInterval(function() {
     localVideoStatsDiv.innerHTML = '<strong>Video dimensions:</strong> ' +
       localVideo.videoWidth + 'x' + localVideo.videoHeight + 'px';
   }
-    trace('local video size changed to ' +
-    localVideo.videoWidth + 'x' + localVideo.videoHeight);
   if (remoteVideo.videoWidth) {
     remoteVideoStatsDiv.innerHTML = '<strong>Video dimensions:</strong> ' +
       remoteVideo.videoWidth + 'x' + remoteVideo.videoHeight + 'px';

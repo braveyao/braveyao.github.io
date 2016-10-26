@@ -25,17 +25,7 @@ localVideo.addEventListener('loadedmetadata', function() {
   trace('Local video videoWidth: ' + this.videoWidth +
     'px,  videoHeight: ' + this.videoHeight + 'px');
 });
-localVideo.onresize = function() {
-  trace('local video size changed to ' +
-    localVideo.videoWidth + 'x' + localVideo.videoHeight);
-  // We'll use the first onsize callback as an indication that video has started
-  // playing out.
-  if (startTime) {
-    var elapsedTime = window.performance.now() - startTime;
-    trace('Setup time: ' + elapsedTime.toFixed(3) + 'ms');
-    startTime = null;
-  }
-};
+
 remoteVideo.addEventListener('loadedmetadata', function() {
   trace('Remote video videoWidth: ' + this.videoWidth +
     'px,  videoHeight: ' + this.videoHeight + 'px');
