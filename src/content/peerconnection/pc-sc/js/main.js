@@ -65,6 +65,7 @@ function gotStream(stream) {
   localVideo.srcObject = stream;
   localStream = stream;
   callButton.disabled = false;
+  trace('localVideo:' + localVideo.videoWidth + 'x' + localVideo.videoHeight + 'px';);
 }
 
 function gotStream2(stream) {
@@ -87,10 +88,15 @@ function start() {
   });
   
   trace('Requesting local stream for pc2');
-  navigator.mediaDevices.getUserMedia({
-    audio: false,
-    video: {'mandatory': {'chromeMediaSource':'screen'}}
-  })
+  var constraints = {};
+  constraints.audio = false;
+  constraints.video = {};
+  constraints.video.chromeMediaSource = {exact: "screen"};
+  constraints.video.width = {exact: 640};
+  constraints.video.height = {exact: 480};
+  constraints.video.frameRate = {exact: 5};
+ 
+  navigator.mediaDevices.getUserMedia(constraints)
   .then(gotStream2)
   .catch(function(e) {
     alert('getUserMedia() error: ' + e.name);
