@@ -123,7 +123,7 @@ function gotStream(stream) {
   console.log('GetUserMedia succeeded');
   localStream = stream;
   localVideo.srcObject = stream;
-    trace('local video size changed to ' +
+  trace('local video size changed to ' +
     localVideo.videoWidth + 'x' + localVideo.videoHeight);
 }
 
