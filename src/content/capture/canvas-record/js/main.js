@@ -26,6 +26,7 @@ var sourceBuffer;
 var canvas = document.querySelector('canvas');
 var video = document.querySelector('video');
 
+var codecSelector = document.querySelector('select#codec');
 var recordButton = document.querySelector('button#record');
 var playButton = document.querySelector('button#play');
 var downloadButton = document.querySelector('button#download');
@@ -38,7 +39,7 @@ main();
 
 // window.isSecureContext could be used for Chrome
 var isSecureOrigin = location.protocol === 'https:' ||
-location.host === 'localhost';
+location.hostname === 'localhost';
 if (!isSecureOrigin) {
   alert('getUserMedia() must be run from a secure origin: HTTPS or localhost.' +
     '\n\nChanging protocol to HTTPS');
@@ -77,28 +78,30 @@ function toggleRecording() {
 
 // The nested try blocks will be simplified when Chrome 47 moves to Stable
 function startRecording() {
-  var options = {mimeType: 'video/webm'};
+  var codec = codecSelector.options[codecSelector.selectedIndex]
+    .value;
+  console.log('Selected video codec: ' + codec);
+  var options = {mimeType: 'video/webm;codecs='+codec};
   recordedBlobs = [];
-  try {
-    mediaRecorder = new MediaRecorder(stream, options);
-  } catch (e0) {
-    console.log('Unable to create MediaRecorder with options Object: ', e0);
-    try {
-      options = {mimeType: 'video/webm,codecs=vp9'};
-      mediaRecorder = new MediaRecorder(stream, options);
-    } catch (e1) {
-      console.log('Unable to create MediaRecorder with options Object: ', e1);
-      try {
-        options = 'video/vp8'; // Chrome 47
-        mediaRecorder = new MediaRecorder(stream, options);
-      } catch (e2) {
-        alert('MediaRecorder is not supported by this browser.\n\n' +
-            'Try Firefox 29 or later, or Chrome 47 or later, with Enable experimental Web Platform features enabled from chrome://flags.');
-        console.error('Exception while creating MediaRecorder:', e2);
-        return;
-      }
+  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+    console.log(options.mimeType + ' is not Supported');
+    options = {mimeType: 'video/webm'};
+    if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.log(options.mimeType + ' is not Supported');
+      options = {mimeType: ''};
     }
   }
+
+  codecSelector.disabled = true;
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+  } catch (e) {
+    console.error('Exception while creating MediaRecorder: ' + e);
+    alert('Exception while creating MediaRecorder: '
+      + e + '. mimeType: ' + options.mimeType);
+    return;
+  }
+  
   console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
   recordButton.textContent = 'Stop Recording';
   playButton.disabled = true;

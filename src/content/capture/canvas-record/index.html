@@ -39,6 +39,12 @@
     <video id="recorded" autoplay loop></video>
 
     <div>
+      <label>VideoCodec:</label>
+      <select id="codec">
+        <option value="h264" selected>h264</option>
+        <option value="vp9">vp9</option>
+        <option value="vp8">vp8</option>
+      </select>
       <button id="record">Start Recording</button>
       <button id="play" disabled>Play</button>
       <button id="download" disabled>Download</button>
@@ -68,7 +74,7 @@
   <script src="js/third_party/demo.js"></script>
 
   <!-- include adapter for srcObject shim -->
-  <script src="../../../js/adapter.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   <script src="js/main.js"></script>
   <script src="../../../js/lib/ga.js"></script>
 
