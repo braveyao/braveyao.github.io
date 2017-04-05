@@ -116,6 +116,7 @@ function stopRecording() {
   mediaRecorder.stop();
   console.log('Recorded Blobs: ', recordedBlobs);
   video.controls = true;
+  codecSelector.disabled = false;
 }
 
 function play() {
