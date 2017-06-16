@@ -98,7 +98,7 @@ function displayVideoDimensions() {
 }
 
 video.onloadedmetadata = displayVideoDimensions;
-videoSelect.onchange = start(currentConstraints);
+videoSelect.onchange = getMedia(currentConstraints);
 
 function getMedia(constraints) {
   if (stream) {
