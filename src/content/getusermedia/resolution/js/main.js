@@ -98,7 +98,7 @@ function displayVideoDimensions() {
 }
 
 video.onloadedmetadata = displayVideoDimensions;
-videoSelect.onchange = getMedia(currentConstraints);
+videoSelect.onchange = switchCamera;
 
 function getMedia(constraints) {
   if (stream) {
@@ -118,6 +118,10 @@ function getMedia(constraints) {
       then(gotStream).then(gotDevices).catch(handleError);
   
   currentConstraints = constraints;
+}
+
+function switchCamera() {
+    getMedia(currentConstraints);
 }
 
 function handleError(error) {
