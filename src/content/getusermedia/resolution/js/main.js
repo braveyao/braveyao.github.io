@@ -85,6 +85,8 @@ var fullHdConstraints = {
 function gotStream(mediaStream) {
   window.stream = mediaStream; // stream available to console
   video.srcObject = mediaStream;
+  // Refresh button list in case labels have become available
+  return navigator.mediaDevices.enumerateDevices();
 }
 
 function displayVideoDimensions() {
@@ -106,15 +108,14 @@ function getMedia(constraints) {
   }
 
   var videoSource = videoSelect.value;
-  constraints.video.deviceId = videoSource ? {exact: videoSource} : undefined;
-
-  navigator.mediaDevices.getUserMedia(constraints)
-  .then(gotStream)
-  .catch(function(e) {
-    var message = 'getUserMedia error: ' + e.name;
-    alert(message);
-    console.log(message);
-  });
+  var videoConstraints = {
+      video: {deviceId: videoSource ? {exact: videoSource} : undefined,
+              width: constraints.video.width,
+              height: constraints.video.height}
+  };
+  
+  navigator.mediaDevices.getUserMedia(videoConstraints).
+      then(gotStream).then(gotDevices).catch(handleError);
   
   currentConstraints = constraints;
 }
