@@ -19,6 +19,8 @@ var qvgaButton = document.querySelector('#qvga');
 var hdButton = document.querySelector('#hd');
 var fullHdButton = document.querySelector('#full-hd');
 
+var currentConstraints = vgaConstraints;
+
 function gotDevices(deviceInfos) {
   // Handles being called several times to update labels. Preserve values.
   var values = selectors.map(function(select) {
@@ -94,6 +96,7 @@ function displayVideoDimensions() {
 }
 
 video.onloadedmetadata = displayVideoDimensions;
+videoSelect.onchange = start(currentConstraints);
 
 function getMedia(constraints) {
   if (stream) {
@@ -112,6 +115,8 @@ function getMedia(constraints) {
     alert(message);
     console.log(message);
   });
+  
+  currentConstraints = constraints;
 }
 
 function handleError(error) {
